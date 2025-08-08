@@ -1,11 +1,23 @@
-#include "/home/codeleaded/System/Static/Library/HttpServer.h"
+#include "/home/codeleaded/System/Static/Library/GarbageCollector.h"
 
 int main() {
-    HttpServer hs = HttpServer_New(8080);
-    if(hs.running){
-        HttpServer_Listen(&hs);
-    }
-    HttpServer_Free(&hs);
+
+    GarbageCollector gc = GarbageCollector_New();
+    GarbageCollector_Start(&gc);
+
+    void* owner1 = NULL;
+    GarbageCollector_Alloc(&gc,&owner1,10);
+    
+    void* owner2 = NULL;
+    GarbageCollector_Alloc(&gc,&owner2,10);
+
+    void* owner3 = NULL;
+    GarbageCollector_Share(&gc,&owner2,&owner3);
+
+
+    Thread_Sleep_M(2000);
+
+    GarbageCollector_Free(&gc);    
 
     return 0;
 }
